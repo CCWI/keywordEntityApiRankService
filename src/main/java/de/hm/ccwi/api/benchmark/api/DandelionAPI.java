@@ -6,8 +6,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -23,8 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class DandelionAPI extends APIBasics implements InterfaceAPI {
-
-    private static final Logger LOG = LogManager.getLogger("DandelionAPI");
 
     public static final String API_IDENTIFIER = "Dandelion";
     
@@ -83,12 +79,6 @@ public class DandelionAPI extends APIBasics implements InterfaceAPI {
 
             // Sort the Array List Entities from A to Z
             Collections.sort(foundEntryList, new SortResponseEntity());
-
-            int i = 1;
-            for (ResponseEntry e : foundEntryList) {
-            	LOG.debug("Entity " + i + " is " + e.getEntry() + "(" + e.getConfidence() + ")");
-                i++;
-            }
         }
     }
 }

@@ -86,32 +86,28 @@ public class RatingAlgorithm {
 			if (fuzzySearch) {
 				loweredSearchText = calcFuzzyTP(resultOfRatedAPI, distinctLoweredExpectedKEList, loweredSearchText,
 						foundEntry);
-				
-				// 2. Alle E&K, die nicht vorkamen -> FN++ abgleichen, ob die distinctKEList
-				// wörter enthält, die nicht in der distinctExpectedListe vorkommt.
-				if (!distinctLoweredExpectedKEList.contains(foundEntry.getEntry().toLowerCase())) {
-					resultOfRatedAPI.incrementFn(1.0);
-				}
-				
-				// 3. Alle gefundenen Einträge aus der Goldstandard-Liste -> TN++ & Lösche diese aus dem Text
-				loweredSearchText = calcTN(resultOfRatedAPI, distinctLoweredExpectedKEList, loweredSearchText,
-						loweredFoundEntryStringList);
+				calcFuzzyFN(resultOfRatedAPI, distinctLoweredExpectedKEList, foundEntry);
+
 			} else {
 				loweredSearchText = calcTP(resultOfRatedAPI, distinctLoweredExpectedKEList, loweredSearchText,
 						foundEntry);
-				
+
 				// 2. Alle E&K, die nicht vorkamen -> FN++ abgleichen, ob die distinctKEList
 				// wörter enthält, die nicht in der distinctExpectedListe vorkommt.
-				if (!distinctLoweredExpectedKEList.contains(foundEntry.getEntry().toLowerCase())) {
-					resultOfRatedAPI.incrementFn(1.0);
-				}
-				
-				// 3. Alle gefundenen Einträge aus der Goldstandard-Liste -> TN++ & Lösche diese aus dem Text
-				loweredSearchText = calcFuzzyTN(resultOfRatedAPI, distinctLoweredExpectedKEList, loweredSearchText,
-						loweredFoundEntryStringList);
+				calcFN(resultOfRatedAPI, distinctLoweredExpectedKEList, foundEntry);
 			}
 		}
 
+		// 3. Alle gefundenen Einträge aus der Goldstandard-Liste -> TN++ & Lösche diese
+		// aus dem Text
+		if (fuzzySearch) {
+			loweredSearchText = calcFuzzyTN(resultOfRatedAPI, distinctLoweredExpectedKEList, loweredSearchText,
+					loweredFoundEntryStringList);
+		} else {
+			loweredSearchText = calcTN(resultOfRatedAPI, distinctLoweredExpectedKEList, loweredSearchText,
+					loweredFoundEntryStringList);
+
+		}
 		// 4. Alle Restwörter tokenizen und pro wort das größer als 1 ist FP++
 		StringTokenizer tokenizedText = new StringTokenizer(loweredSearchText, ".,! ()[]+#@");
 
@@ -120,6 +116,28 @@ public class RatingAlgorithm {
 			if (s.length() > 1) {
 				resultOfRatedAPI.incrementFp(1.0);
 			}
+		}
+	}
+
+	private void calcFuzzyFN(RatingLog resultOfRatedAPI, List<String> distinctLoweredExpectedKEList,
+			ResponseEntry foundEntry) {
+		Boolean matchingEntry;
+		matchingEntry = false;
+		for (String dLExpectedKE : distinctLoweredExpectedKEList) {
+			if (dLExpectedKE.contains(foundEntry.getEntry().toLowerCase())) {
+				matchingEntry = true;
+				break;
+			}
+		}
+		if (!matchingEntry) {
+			resultOfRatedAPI.incrementFn(1.0);
+		}
+	}
+
+	private void calcFN(RatingLog resultOfRatedAPI, List<String> distinctLoweredExpectedKEList,
+			ResponseEntry foundEntry) {
+		if (!distinctLoweredExpectedKEList.contains(foundEntry.getEntry().toLowerCase())) {
+			resultOfRatedAPI.incrementFn(1.0);
 		}
 	}
 
@@ -134,13 +152,22 @@ public class RatingAlgorithm {
 		return loweredSearchText;
 	}
 
+	/**
+	 * RESULT found, but no Entry in GS
+	 * 
+	 * @param resultOfRatedAPI
+	 * @param distinctLoweredExpectedKEList
+	 * @param loweredSearchText
+	 * @param loweredFoundEntryStringList
+	 * @return
+	 */
 	private String calcFuzzyTN(RatingLog resultOfRatedAPI, List<String> distinctLoweredExpectedKEList,
 			String loweredSearchText, List<String> loweredFoundEntryStringList) {
 		Boolean matchingEntry;
 		for (String dLExpectedKE : distinctLoweredExpectedKEList) {
 			matchingEntry = false;
 			for (String foundEntry : loweredFoundEntryStringList) {
-				if (foundEntry.contains(dLExpectedKE)) {
+				if (foundEntry.contains(dLExpectedKE) || dLExpectedKE.contains(foundEntry)) {
 					matchingEntry = true;
 					break;
 				}
@@ -149,7 +176,6 @@ public class RatingAlgorithm {
 				resultOfRatedAPI.incrementTn(1.0);
 				loweredSearchText = loweredSearchText.replace(dLExpectedKE.toLowerCase(), "");
 			}
-
 		}
 		return loweredSearchText;
 	}
@@ -175,8 +201,8 @@ public class RatingAlgorithm {
 	}
 
 	/**
-	 * Same as calcTP, but the search is fuzzy. For example: If "agency" instead of
-	 * "digital agency" found, it still counts as TP++.
+	 * Same as calcFuzzyTP, but the search is fuzzy. For example: If "agency"
+	 * instead of "digital agency" found, it still counts as TP++.
 	 * 
 	 * @param resultOfRatedAPI
 	 * @param distinctLoweredExpectedKEList
@@ -186,18 +212,14 @@ public class RatingAlgorithm {
 	 */
 	private String calcFuzzyTP(RatingLog resultOfRatedAPI, List<String> distinctLoweredExpectedKEList,
 			String loweredSearchText, ResponseEntry foundEntry) {
-		// for-Schleife um die Suche fuzzy zu machen.
-		// (Bspw. wenn "agency" statt "digital agency" gefunden wird, dann +0,5.)
+		// for-Schleife um die Suche fuzzy zu machen. (Bspw. wenn "agency" statt
+		// "digital agency" gefunden wird, dann +0,5.)
 		for (String expectedKE : distinctLoweredExpectedKEList) {
 			if (expectedKE.contains(foundEntry.getEntry().toLowerCase())
 					&& loweredSearchText.contains(foundEntry.getEntry().toLowerCase())) {
-//				if(expectedKE.equals(foundEntry.getEntry().toLowerCase())) {
-					resultOfRatedAPI.incrementTp(1.0);					
-//				} else {
-//					resultOfRatedAPI.incrementTp(0.5);
-//				}
+				resultOfRatedAPI.incrementTp(1.0);
 				loweredSearchText = loweredSearchText.replace(expectedKE.toLowerCase(), "");
-//				break;
+				// break;
 			}
 		}
 		return loweredSearchText;

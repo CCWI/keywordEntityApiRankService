@@ -3,15 +3,16 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.hm.ccwi</groupId>
-	<artifactId>twitterDataExtraction</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<artifactId>keywordEntityApiRankService</artifactId>
+	<version>1.1-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 
-	<name>TwitterDataExtraction</name>
+	<name>KeywordEntityApiRankService</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
+		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<json-simple.version>1.1.1</json-simple.version>
@@ -99,8 +100,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -71,12 +71,4 @@ public interface InterfaceAPI {
 	 */
 	public void executePOST() throws IOException;
 
-	/**
-	 * 
-	 * @param list
-	 * @param list2
-	 * @return
-	 */
-	public double calculateRating(String message, List<String> list, List<String> list2);
-	
 }

@@ -4,6 +4,7 @@ public class Configuration {
 
 	public static final String[] GOLDSTANDARD_LIST = { "GoldstandardEntityKeyword500-2.txt",
 			"GoldstandardReddit100.txt" };
+	public static final String languageOfGoldstandard = "en";
 	
 	/**
 	 * Implements a fuzzy search. 

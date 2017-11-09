@@ -126,20 +126,6 @@ public class APIBasics {
 	}
 
 	/**
-	 * Calculate the rating of an API.
-	 * 
-	 * @param expectedEntityList
-	 * @param expectedKeywordList
-	 * @return
-	 */
-	public double calculateRating(String text, List<String> expectedEntityList, List<String> expectedKeywordList) {
-		// TODO implement alogrithm with (ResponseEntity entityList : entityList), expectedEntityList and expectedKeywordList
-		
-		
-		return 0.0;
-	}
-
-	/**
 	 * Check if entity should be added to the entity list. First check if entity is
 	 * already in the entity list. Second check if entity is an URL or has more than
 	 * 2 spaces

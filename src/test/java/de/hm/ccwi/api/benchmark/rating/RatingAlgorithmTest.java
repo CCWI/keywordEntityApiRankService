@@ -97,7 +97,7 @@ public class RatingAlgorithmTest {
 		List<RatingLog> resultLogList = rate.rateFoundEntriesOfAPI(apiMockList, ekLogList, false);
 		
 		for(RatingLog resultLog : resultLogList) {
-			System.out.println("F1: " + resultLog.getF1());
+			System.out.println(resultLog.toString());
 			Assert.assertTrue(resultLog.getF1() == 0.2222222222222222);
 		}
 	}
@@ -106,15 +106,15 @@ public class RatingAlgorithmTest {
 	 * Wörter gesamt: 19
 	 * Anzahl Entitäten im gesamten Goldstandard = 6 
 	 * Anzahl Nicht Entitäten (alle anderen Wörter) = 13 
-	 * TP = 3; (1+1+0,5+0,5) 
+	 * TP = 4; (1+1+1+1) //KEINE 0,5 
 	 * FN = 1; 
 	 * FP = 11; 
 	 * TN = 1; 
 	 * 
-	 * not-fuzzy:
-	 * P = 5/(5+11) = 0,3125
-	 * R = 5/(5+1) = 0,833
-	 * F1 = 2*((0,3125*0,833)/(0,3125+0,833)) = 0,454495853
+	 * fuzzy:
+	 * P = 4/(4+11) = 0,2142857
+	 * R = 4/(4+1) = 0,75
+	 * F1 = 2*((0,2142857*0,75)/(0,2142857+0,75)) = 0,333333316
 	 * 
 	 */
 	@Test
@@ -124,9 +124,8 @@ public class RatingAlgorithmTest {
 		List<RatingLog> resultLogList = rate.rateFoundEntriesOfAPI(apiMockList, ekLogList, true);
 		
 		for(RatingLog resultLog : resultLogList) {
-			System.out.println("F1: " + resultLog.getF1());
 			System.out.println(resultLog.toString());
-			Assert.assertTrue(resultLog.getF1() == 0.454495853);
+			Assert.assertTrue(resultLog.getF1() == 0.4);
 		}
 	}
 }

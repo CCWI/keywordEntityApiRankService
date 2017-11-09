@@ -22,7 +22,6 @@ public class ReadTwitterJSON {
 
 	private String urlPattern1 = "((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
 	private String urlPattern2 = "\\(+((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)\\)";
-	private String urlPattern3 = "((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)+\\)";
 
 	private JSONObject twitterJSON;
 	private JSONObject twitterObject;
