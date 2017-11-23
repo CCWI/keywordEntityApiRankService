@@ -32,7 +32,6 @@ public class MeaningCloudAPI extends APIBasics implements InterfaceAPI {
      * Constructor.
      */
 	public MeaningCloudAPI() {
-		foundEntryList = new ArrayList<>();
 		apiKey = properties.getProperty("meaningCloudAPIKey");
 		outputMode = properties.getProperty("outputMode");
 		lang = "en";
@@ -100,5 +99,10 @@ public class MeaningCloudAPI extends APIBasics implements InterfaceAPI {
 				i++;
 			}
 		}
+	}
+	
+	@Override
+	public String getApiName() {
+		return API_IDENTIFIER;
 	}
 }

@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.hm.ccwi.api.benchmark.api.response.ResponseEntry;
+import de.hm.ccwi.api.benchmark.rating.dto.EntityKeywordLog;
+import de.hm.ccwi.api.benchmark.rating.dto.RatingLog;
 
 public class RatingAlgorithmTest {
 
@@ -28,7 +30,7 @@ public class RatingAlgorithmTest {
 		expectedKeywordList.add("Beautiful websites");
 		expectedKeywordList.add("Digital agency");
 		EntityKeywordLog ekLog = new EntityKeywordLog(
-	"Are you drawing beautiful websites at your digital agency? Want to create on top of amazing coding? #IoT #cpp", expectedEntityList, expectedKeywordList);
+	"Are you drawing beautiful websites at your digital agency? Want to create on top of amazing coding? #IoT #cpp", apiName, expectedEntityList, expectedKeywordList);
 		
 		List<ResponseEntry> responseEntryList = new ArrayList<>();
 		String[] foundEntries = new String[] {"Cpp", "IoT", "websites", "agency", "top"};
@@ -40,7 +42,6 @@ public class RatingAlgorithmTest {
 		}
 		
 		ekLog.setFoundEntryList(responseEntryList);
-		ekLog.setApiName(apiName);
 		ekLogList.add(ekLog);
 	}
 	
@@ -59,11 +60,32 @@ public class RatingAlgorithmTest {
 	 * FP: +1 Für jedes andere Wort aus dem gesamten Goldstandard, das
 	 * korrekterweise nicht als Entität/Keyword klassifiziert wurde. True negativ:
 	 * Ein Wort das im Goldstandard NICHT (n) als Entität gekennzeichnet wird auch
-	 * NICHT (n) durch die API als Entität identifiziert. [Satz - (TP + )]
+	 * NICHT (n) durch die API als Entität identifiziert. [Satz - (TP + )]       FP = (GS not | RESULT found)
 	 * 
 	 * TN: -1 Für alle nicht gefundenen Entitäten/Keywords im gesamten Goldstandard.
 	 * False negativ: Ein Wort das im Goldstandard als Entität (p) gekennzeichnet
 	 * ist wird NICHT (n) durch die API als Entität identifiziert. (GS ok | RESULT not)
+	 * 
+	 * FP <=> FN
+	 * TN <=> FN
+	 * 
+	 * TP: +1 Für jede korrekt gefundene Entität/Keyword im gesamten Goldstandard.
+	 * True positiv: Ein Wort das im Goldstandard als Entität (p) gekennzeichnet
+	 * ist, wird auch durch die API als Entität (p) identifiziert.
+	 * 
+	 * FP: -1 Für alle falschen Entitäten/Keywords im gesamten Goldstandard. False
+	 * positiv: Ein Wort das im Goldstandard NICHT (n) als Entität gekennzeichnet
+	 * ist, wird durch die API als Entität (p) identifiziert. (GS not | RESULT found)
+	 * 
+	 * TN: +1 Für jedes andere Wort aus dem gesamten Goldstandard, das
+	 * korrekterweise nicht als Entität/Keyword klassifiziert wurde. True negativ:
+	 * Ein Wort das im Goldstandard NICHT (n) als Entität gekennzeichnet wird auch
+	 * NICHT (n) durch die API als Entität identifiziert. [Satz - (TP + )]
+	 * 
+	 * FN: -1 Für alle nicht gefundenen Entitäten/Keywords im gesamten Goldstandard.
+	 * False negativ: Ein Wort das im Goldstandard als Entität (p) gekennzeichnet
+	 * ist wird NICHT (n) durch die API als Entität identifiziert. (GS ok | RESULT not)
+	 * 
 	 * 
 	 * Berechnung der Accuracy (Robustheit) = (TP+TN) / (TP+TN+FP+FN).
 	 * Berechnung der Genauigkeit (precision P) = TP / (TP+FP).
@@ -92,9 +114,9 @@ public class RatingAlgorithmTest {
 	 */
 	@Test
 	public void rateFoundEntriesOfAPITest() {
-		RatingAlgorithm rate = new RatingAlgorithm();
+		RatingCalculator rate = new RatingCalculator(false);
 		
-		List<RatingLog> resultLogList = rate.rateFoundEntriesOfAPI(apiMockList, ekLogList, false);
+		List<RatingLog> resultLogList = rate.rateFoundEntriesOfAPI(apiMockList, ekLogList);
 		
 		for(RatingLog resultLog : resultLogList) {
 			System.out.println(resultLog.toString());
@@ -119,9 +141,9 @@ public class RatingAlgorithmTest {
 	 */
 	@Test
 	public void rateFoundEntriesOfAPIFuzzyTest() {
-		RatingAlgorithm rate = new RatingAlgorithm();
+		RatingCalculator rate = new RatingCalculator(true);
 		
-		List<RatingLog> resultLogList = rate.rateFoundEntriesOfAPI(apiMockList, ekLogList, true);
+		List<RatingLog> resultLogList = rate.rateFoundEntriesOfAPI(apiMockList, ekLogList);
 		
 		for(RatingLog resultLog : resultLogList) {
 			System.out.println(resultLog.toString());

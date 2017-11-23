@@ -70,5 +70,12 @@ public interface InterfaceAPI {
 	 * @throws IOException
 	 */
 	public void executePOST() throws IOException;
+	
+	/**
+	 * Name of the API for identification.
+	 * 
+	 * @return
+	 */
+	public String getApiName();
 
 }

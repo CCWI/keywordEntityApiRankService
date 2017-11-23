@@ -33,7 +33,6 @@ public class AlchemyEntityAPI extends APIBasics implements InterfaceAPI {
      * Constructor.
      */
 	public AlchemyEntityAPI() {
-		foundEntryList = new ArrayList<>();
 		apiKey = properties.getProperty("alchemyAPIKey");
 		outputMode = properties.getProperty("outputMode");
 	}
@@ -98,5 +97,10 @@ public class AlchemyEntityAPI extends APIBasics implements InterfaceAPI {
 				i++;
 			}
 		}
+	}
+	
+	@Override
+	public String getApiName() {
+		return API_IDENTIFIER;
 	}
 }

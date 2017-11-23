@@ -24,13 +24,15 @@ import de.hm.ccwi.api.benchmark.util.SortResponseEntity;
  */
 public class WatsonNLP extends APIBasics implements InterfaceAPI {
 
+	public static final String API_IDENTIFIER = "watsonNlp";
+
 	private static WatsonNLP instance;
 	private NaturalLanguageUnderstanding service;
-//	private Map<String, AnalysisResults> tweetList = new HashMap<>();
+	// private Map<String, AnalysisResults> tweetList = new HashMap<>();
 	private AnalyzeOptions parameters;
 	private AnalysisResults result;
-	
-	private WatsonNLP() {
+
+	public WatsonNLP() {
 		service = new NaturalLanguageUnderstanding(NaturalLanguageUnderstanding.VERSION_DATE_2017_02_27,
 				properties.getProperty("watsonAPIUsername"), properties.getProperty("watsonAPIKey"));
 	}
@@ -55,11 +57,11 @@ public class WatsonNLP extends APIBasics implements InterfaceAPI {
 
 		Features features = new Features.Builder().entities(entitiesOptions).keywords(keywordsOptions).build();
 
-		this.parameters = new AnalyzeOptions.Builder().text(message).features(features)
-				.returnAnalyzedText(true).language(Configuration.languageOfGoldstandard).build();
+		this.parameters = new AnalyzeOptions.Builder().text(message).features(features).returnAnalyzedText(true)
+				.language(Configuration.languageOfGoldstandard).build();
 
 	}
-	
+
 	@Override
 	public void executePOST() throws IOException {
 		this.result = service.analyze(parameters).execute();
@@ -67,16 +69,28 @@ public class WatsonNLP extends APIBasics implements InterfaceAPI {
 
 	@Override
 	public void receiveGET() throws IOException, ParseException {
-		for(EntitiesResult eR : this.result.getEntities()) {
-			ResponseEntry response = new ResponseEntry();
-			response.setEntry(eR.getText());
-			foundEntryList.add(response);
+		if (this.result != null) {
+
+			for (EntitiesResult eR : this.result.getEntities()) {
+				ResponseEntry response = new ResponseEntry();
+				if (eR != null && eR.getText() != null) {
+					response.setEntry(eR.getText());
+				}
+				foundEntryList.add(response);
+			}
+			for (KeywordsResult kwR : this.result.getKeywords()) {
+				ResponseEntry response = new ResponseEntry();
+				if (kwR != null && kwR.getText() != null) {
+					response.setEntry(kwR.getText());
+				}
+				foundEntryList.add(response);
+			}
 		}
-		for(KeywordsResult kwR : this.result.getKeywords()) {
-			ResponseEntry response = new ResponseEntry();
-			response.setEntry(kwR.getText());
-			foundEntryList.add(response);
-		}
-        Collections.sort(foundEntryList, new SortResponseEntity());
+		Collections.sort(foundEntryList, new SortResponseEntity());
+	}
+
+	@Override
+	public String getApiName() {
+		return API_IDENTIFIER;
 	}
 }

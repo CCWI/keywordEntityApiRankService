@@ -1,4 +1,4 @@
-package de.hm.ccwi.api.benchmark.rating;
+package de.hm.ccwi.api.benchmark.rating.dto;
 
 import java.util.List;
 
@@ -20,8 +20,9 @@ public class EntityKeywordLog {
 	 */
 	private List<ResponseEntry> foundEntryList;
 
-	public EntityKeywordLog(String text, List<String> expectedEntityList, List<String> expectedKeywordList) {
+	public EntityKeywordLog(String apiName, String text, List<String> expectedEntityList, List<String> expectedKeywordList) {
 		super();
+		this.apiName = apiName;
 		this.text = text;
 		this.expectedEntityList = expectedEntityList;
 		this.expectedKeywordList = expectedKeywordList;
@@ -77,9 +78,8 @@ public class EntityKeywordLog {
 
 	@Override
 	public String toString() {
-		return "EntityKeywordRatingLog [apiName=" + apiName + ", text=" + text + ", expectedEntityList="
-				+ expectedEntityList + ", expectedKeywordList=" + expectedKeywordList + ", foundEntryList="
-				+ foundEntryList + "]";
+		return "EntityKeywordLog [apiName=" + apiName + ", text=" + text + ", expectedEntityList=" + expectedEntityList
+				+ ", expectedKeywordList=" + expectedKeywordList + ", foundEntryList=" + foundEntryList + "]";
 	}
 
 }

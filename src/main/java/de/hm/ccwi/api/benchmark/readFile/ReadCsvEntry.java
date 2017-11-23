@@ -11,6 +11,7 @@ import java.util.StringTokenizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.hm.ccwi.api.benchmark.Configuration;
 import de.hm.ccwi.api.benchmark.sets.TestEntry;
 
 public class ReadCsvEntry {
@@ -25,7 +26,7 @@ public class ReadCsvEntry {
 		try {
 			while ((nextLine = in.readLine()) != null) {
 				TestEntry tEntry = new TestEntry();
-				StringTokenizer st = new StringTokenizer(nextLine, ";$;");
+				StringTokenizer st = new StringTokenizer(nextLine, Configuration.LIST_SEPARATOR);
 				int counter = 0;
 				while (st.hasMoreTokens()) {
 					String rowCell = st.nextToken();

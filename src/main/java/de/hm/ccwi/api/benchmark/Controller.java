@@ -22,21 +22,4 @@ public class Controller extends Configuration {
 			e.printStackTrace();
 		}
 	}
-
-//	/**
-//	 * Print parsed Entities for Testing! -> Delete for production.
-//	 * @param overallTestEntryList
-//	 */
-//	private static void printExpectedEntityList(List<TestEntry> overallTestEntryList) {
-//		for(TestEntry entry : overallTestEntryList) {
-//			if(entry.getExpectedEntityList() != null) {
-//
-//				System.out.print("ExpectedEntity: ");
-//				for(String s : entry.getExpectedEntityList()) {
-//					System.out.print(s + " -- ");										
-//				}
-//				System.out.println("");
-//			}
-//		}
-//	}
 }

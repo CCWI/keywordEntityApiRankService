@@ -15,6 +15,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -44,6 +45,7 @@ public class APIBasics {
 	 * Read the connection.properties file. This file includes all API Keys
 	 */
 	public APIBasics() {
+		foundEntryList = new ArrayList<>();
 		properties = new Properties();
 		File f = new File("resources/connection.properties");
 

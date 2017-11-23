@@ -1,4 +1,4 @@
-package de.hm.ccwi.api.benchmark.rating;
+package de.hm.ccwi.api.benchmark.rating.dto;
 
 public class RatingLog {
 
@@ -6,56 +6,62 @@ public class RatingLog {
 	 * Name of API, which is rated.
 	 */
 	private String api;
-	
+
 	/**
 	 * Accuracy (Robustheit) = (TP+TN) / (TP+TN+FP+FN).
 	 */
-	private double accuracy;
+	private Double accuracy;
 
 	/**
 	 * Genauigkeit (precision P) = TP / (TP+FP).
 	 */
-	private double precision;
+	private Double precision;
 
 	/**
 	 * Trefferquote (recall R) = TP / (TP+FN).
 	 */
-	private double recall;
+	private Double recall;
 
 	/**
 	 * harmonischen Mittels (F1-Wert) = 2* ((P*R)/(P+R)).
 	 */
-	private double f1;
+	private Double f1;
 
 	/**
 	 * Für jede korrekt gefundene Entität/Keyword im gesamten Goldstandard (TP).
 	 */
-	private double tp;
+	private int tp;
 
 	/**
 	 * Für alle falschen Entitäten/Keywords im gesamten Goldstandard (FN).
 	 */
-	private double fn;
+	private int fn;
 
 	/**
 	 * Für jedes andere Wort aus dem gesamten Goldstandard, das korrekterweise nicht
 	 * als Entität/Keyword klassifiziert wurde (FP).
 	 */
-	private double fp;
+	private int fp;
 
 	/**
 	 * Für alle nicht gefundenen Entitäten/Keywords im gesamten Goldstandard (TN).
 	 */
-	private double tn;
+	private int tn;
+
+	/**
+	 * Analyzed Object.
+	 */
+	private EntityKeywordLog entityKeywordLog;
 
 	/**
 	 * Constructor for new RatingLog.
 	 * 
 	 * @param api
 	 */
-	public RatingLog(String api) {
+	public RatingLog(String api, EntityKeywordLog entityKeywordLog) {
 		super();
 		this.api = api;
+		this.entityKeywordLog = entityKeywordLog;
 	}
 
 	/**
@@ -71,7 +77,8 @@ public class RatingLog {
 	 * @param fP
 	 * @param tN
 	 */
-	public RatingLog(String api, double accuracy, double precision, double recall, double f1, double tp, double fn, double fp, double tn) {
+	public RatingLog(String api, Double accuracy, Double precision, Double recall, Double f1, int tp, int fn,
+			int fp, int tn, EntityKeywordLog entityKeywordLog) {
 		super();
 		this.accuracy = accuracy;
 		this.precision = precision;
@@ -81,6 +88,7 @@ public class RatingLog {
 		this.fn = fn;
 		this.fp = fp;
 		this.tn = tn;
+		this.entityKeywordLog = entityKeywordLog;
 	}
 
 	public String getApi() {
@@ -91,74 +99,83 @@ public class RatingLog {
 		this.api = api;
 	}
 
-	public double getAccuracy() {
+	public Double getAccuracy() {
 		return accuracy;
 	}
 
-	public void setAccuracy(double accuracy) {
+	public void setAccuracy(Double accuracy) {
 		this.accuracy = accuracy;
 	}
 
-	public double getPrecision() {
+	public Double getPrecision() {
 		return precision;
 	}
 
-	public void setPrecision(double precision) {
+	public void setPrecision(Double precision) {
 		this.precision = precision;
 	}
 
-	public double getRecall() {
+	public Double getRecall() {
 		return recall;
 	}
 
-	public void setRecall(double recall) {
+	public void setRecall(Double recall) {
 		this.recall = recall;
 	}
 
-	public double getF1() {
+	public Double getF1() {
 		return f1;
 	}
 
-	public void setF1(double f1) {
+	public void setF1(Double f1) {
 		this.f1 = +f1;
 	}
 
-	public double getTp() {
+	public int getTp() {
 		return tp;
 	}
 
-	public synchronized void incrementTp(double value) {
+	public synchronized void incrementTp(int value) {
 		this.tp = tp + value;
 	}
 
-	public double getFn() {
+	public int getFn() {
 		return fn;
 	}
 
-	public synchronized void incrementFn(double value) {
+	public synchronized void incrementFn(int value) {
 		this.fn = this.fn + value;
 	}
 
-	public double getFp() {
+	public int getFp() {
 		return fp;
 	}
 
-	public synchronized void incrementFp(double value) {
+	public synchronized void incrementFp(int value) {
 		this.fp = this.fp + value;
 	}
 
-	public double getTn() {
+	public int getTn() {
 		return tn;
 	}
 
-	public synchronized void incrementTn(double value) {
+	public synchronized void incrementTn(int value) {
 		this.tn = this.tn + value;
+	}
+	
+	public EntityKeywordLog getEntityKeywordLog() {
+		return entityKeywordLog;
+	}
+
+	public void setEntityKeywordLog(EntityKeywordLog entityKeywordLog) {
+		this.entityKeywordLog = entityKeywordLog;
 	}
 
 	@Override
 	public String toString() {
 		return "RatingLog [api=" + api + ", accuracy=" + accuracy + ", precision=" + precision + ", recall=" + recall
-				+ ", f1=" + f1 + ", tp=" + tp + ", fn=" + fn + ", fp=" + fp + ", tn=" + tn + "]";
+				+ ", f1=" + f1 + ", tp=" + tp + ", fn=" + fn + ", fp=" + fp + ", tn=" + tn + ", entityKeywordLog="
+				+ entityKeywordLog + "]";
 	}
 
 }

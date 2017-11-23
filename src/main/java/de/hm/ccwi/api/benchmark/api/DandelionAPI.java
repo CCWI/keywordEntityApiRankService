@@ -28,7 +28,6 @@ public class DandelionAPI extends APIBasics implements InterfaceAPI {
      * Constructor.
      */
     public DandelionAPI () {
-    	foundEntryList = new ArrayList<>();
         apiKey = properties.getProperty("dandelionAPIKey");
     }
 
@@ -81,4 +80,9 @@ public class DandelionAPI extends APIBasics implements InterfaceAPI {
             Collections.sort(foundEntryList, new SortResponseEntity());
         }
     }
+    
+	@Override
+	public String getApiName() {
+		return API_IDENTIFIER;
+	}
 }
