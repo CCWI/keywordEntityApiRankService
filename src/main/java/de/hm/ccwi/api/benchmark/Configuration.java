@@ -11,13 +11,9 @@ public class Configuration {
 	/**
 	 * List of messages, which need to be analyzed. These lists should also contain
 	 * the expected entity- and keyword-lists.
-	 * For Example:
-	 * 		"GoldstandardEntityKeyword500.txt"
-	 * 		"GoldstandardReddit100.txt"
-	 * 		"GoldstandardEntityKeyword500-withoutHashtags.txt"
 	 */
 	public static final String[] GOLDSTANDARD_LIST = 
-		{ "GoldstandardReddit100.txt" };
+		{ "goldstandardEntityKeyword-sample.txt" };
 
 	/**
 	 * Separator in Goldstandard-lists.
@@ -27,7 +23,7 @@ public class Configuration {
 	/**
 	 * Amount of entries in Goldstandard-List, which should be analyzed.
 	 */
-	public static final Integer AMOUNT_OF_ENTRIES_TO_ANALYZE = 500;
+	public static final Integer AMOUNT_OF_ENTRIES_TO_ANALYZE = 1;
 
 	/**
 	 * Implements a fuzzy search.

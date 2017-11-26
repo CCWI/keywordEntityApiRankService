@@ -28,6 +28,3 @@ tmp/**/*
 
 #Project
 /src/main/bin/
-/resources/connection.properties
-/logs/*.*
-/src/main/resources/*.*
