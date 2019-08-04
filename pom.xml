@@ -17,7 +17,7 @@
 
 		<json-simple.version>1.1.1</json-simple.version>
 		<opencsv.version>4.0</opencsv.version>
-		<watson.version>4.0.0</watson.version>
+		<watson.version>6.14.2</watson.version>
 		<httpclient.version>4.5.2</httpclient.version>
 		<log4j.version>2.7</log4j.version>
 		<junit.version>4.12</junit.version>
@@ -39,43 +39,31 @@
 	</repositories>
 
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
 			<version>${json-simple.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>23.2-jre</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
 		<dependency>
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
 			<version>${opencsv.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.ibm.watson.developer_cloud</groupId>
+			<groupId>com.ibm.watson</groupId>
 			<artifactId>natural-language-understanding</artifactId>
-			<version>4.0.0</version>
+			<version>7.1.1</version>
 		</dependency>
-		<dependency>
-			<groupId>com.ibm.watson.developer_cloud</groupId>
-			<artifactId>java-sdk</artifactId>
-			<version>${watson.version}</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>${httpclient.version}</version>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>

@@ -23,26 +23,14 @@ import java.util.List;
 public class DandelionAPI extends APIBasics implements InterfaceAPI {
 
     public static final String API_IDENTIFIER = "Dandelion";
-    
-    /**
-     * Constructor.
-     */
+
     public DandelionAPI () {
         apiKey = properties.getProperty("dandelionAPIKey");
     }
 
-    /**
-     * Implemented createPOST from Interface interfaceAPI (see for more details)
-     *
-     * @param message 
-     * 				Message, which should be posted.
-     * @throws UnsupportedEncodingException if text is not in Unicode
-     */
     public void createPOST (String message) throws UnsupportedEncodingException {
         httpclient = HttpClients.createDefault();
         httppost = new HttpPost(Configuration.dandelionApiUri);
-
-        // Request parameters and other properties.
         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
         params.add(new BasicNameValuePair("text", message));
         params.add(new BasicNameValuePair("token", apiKey));
@@ -50,12 +38,6 @@ public class DandelionAPI extends APIBasics implements InterfaceAPI {
         httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
     }
 
-    /**
-     * Implemented receiveGET from Interface interfaceAPI (see for more details)
-     *
-     * @throws IOException    IO Error
-     * @throws ParseException Parse Error
-     */
     public void receiveGET () throws IOException, ParseException {
         JSONArray JSONArray = readResponseJSON(API_IDENTIFIER, EntityUtils.toString(httpEntity, "UTF-8"), "annotations");
 
@@ -68,7 +50,6 @@ public class DandelionAPI extends APIBasics implements InterfaceAPI {
                 String s = (String) object.get("spot");
                 s = addEntity(s);
 
-                // Add Entity only if it is new and has not been added before
                 if (s != null) {
                     entity.setEntry(s);
                     entity.setConfidence((Double) object.get("confidence"));
@@ -76,7 +57,6 @@ public class DandelionAPI extends APIBasics implements InterfaceAPI {
                 }
             }
 
-            // Sort the Array List Entities from A to Z
             Collections.sort(foundEntryList, new SortResponseEntity());
         }
     }

@@ -2,81 +2,23 @@ package de.hm.ccwi.api.benchmark.rating.dto;
 
 public class RatingLog {
 
-	/**
-	 * Name of API, which is rated.
-	 */
 	private String api;
-
-	/**
-	 * Accuracy (Robustheit) = (TP+TN) / (TP+TN+FP+FN).
-	 */
 	private Double accuracy;
-
-	/**
-	 * Genauigkeit (precision P) = TP / (TP+FP).
-	 */
 	private Double precision;
-
-	/**
-	 * Trefferquote (recall R) = TP / (TP+FN).
-	 */
 	private Double recall;
-
-	/**
-	 * harmonischen Mittels (F1-Wert) = 2* ((P*R)/(P+R)).
-	 */
 	private Double f1;
-
-	/**
-	 * Für jede korrekt gefundene Entität/Keyword im gesamten Goldstandard (TP).
-	 */
 	private int tp;
-
-	/**
-	 * Für alle falschen Entitäten/Keywords im gesamten Goldstandard (FN).
-	 */
 	private int fn;
-
-	/**
-	 * Für jedes andere Wort aus dem gesamten Goldstandard, das korrekterweise nicht
-	 * als Entität/Keyword klassifiziert wurde (FP).
-	 */
 	private int fp;
-
-	/**
-	 * Für alle nicht gefundenen Entitäten/Keywords im gesamten Goldstandard (TN).
-	 */
 	private int tn;
-
-	/**
-	 * Analyzed Object.
-	 */
 	private EntityKeywordLog entityKeywordLog;
 
-	/**
-	 * Constructor for new RatingLog.
-	 * 
-	 * @param api
-	 */
 	public RatingLog(String api, EntityKeywordLog entityKeywordLog) {
 		super();
 		this.api = api;
 		this.entityKeywordLog = entityKeywordLog;
 	}
 
-	/**
-	 * Constructor for all fields.
-	 * 
-	 * @param api
-	 * @param accuracy
-	 * @param precision
-	 * @param recall
-	 * @param f1
-	 * @param tP
-	 * @param fN
-	 * @param fP
-	 * @param tN
-	 */
 	public RatingLog(String api, Double accuracy, Double precision, Double recall, Double f1, int tp, int fn,
 			int fp, int tn, EntityKeywordLog entityKeywordLog) {
 		super();

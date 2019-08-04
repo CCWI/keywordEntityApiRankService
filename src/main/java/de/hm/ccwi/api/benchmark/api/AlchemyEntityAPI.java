@@ -1,5 +1,6 @@
 package de.hm.ccwi.api.benchmark.api;
 
+import de.hm.ccwi.api.benchmark.util.SortResponseEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -14,7 +15,6 @@ import org.json.simple.parser.ParseException;
 
 import de.hm.ccwi.api.benchmark.Configuration;
 import de.hm.ccwi.api.benchmark.api.response.ResponseEntry;
-import de.hm.ccwi.api.benchmark.util.SortResponseEntity;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -28,23 +28,11 @@ public class AlchemyEntityAPI extends APIBasics implements InterfaceAPI {
 	
     public static final String API_IDENTIFIER = "Alchemy";
 
-    
-    /**
-     * Constructor.
-     */
 	public AlchemyEntityAPI() {
 		apiKey = properties.getProperty("alchemyAPIKey");
 		outputMode = properties.getProperty("outputMode");
 	}
 
-	/**
-	 * Implemented createPOST from Interface interfaceAPI (see for more details)
-	 *
-	 * @param tweet
-	 *            Twitter Tweet which should be posted
-	 * @throws UnsupportedEncodingException
-	 *             if text is not in Unicode
-	 */
 	@Override
 	public void createPOST(String tweet) throws UnsupportedEncodingException {
 		httpclient = HttpClients.createDefault();
@@ -60,14 +48,6 @@ public class AlchemyEntityAPI extends APIBasics implements InterfaceAPI {
 
 	}
 
-	/**
-	 * Implemented receiveGET from Interface interfaceAPI (see for more details)
-	 *
-	 * @throws IOException
-	 *             IO Error
-	 * @throws ParseException
-	 *             Parse Error
-	 */
 	@Override
 	public void receiveGET() throws IOException, ParseException {
 		JSONArray JSONArray = readResponseJSON(API_IDENTIFIER, EntityUtils.toString(httpEntity, "UTF-8"), "entities");
@@ -89,7 +69,6 @@ public class AlchemyEntityAPI extends APIBasics implements InterfaceAPI {
 				}
 			}
 
-			// Sort the Array List Entities from A to Z
 			Collections.sort(foundEntryList, new SortResponseEntity());
 			int i = 1;
 			for (ResponseEntry e : foundEntryList) {

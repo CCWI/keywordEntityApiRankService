@@ -19,13 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * @author Marcel
- * @project twitterDataExtraction
- * @email mk@mkarrasch.de
- * @createdOn 10.12.2016
- * @package de.mk.twitterDataExtraction.API
- */
 public class APIBasics {
 
 	private static Double sessionRating;
@@ -41,9 +34,6 @@ public class APIBasics {
 	String topictypes;
 	String lang;
 
-	/**
-	 * Read the connection.properties file. This file includes all API Keys
-	 */
 	public APIBasics() {
 		foundEntryList = new ArrayList<>();
 		properties = new Properties();
@@ -63,12 +53,6 @@ public class APIBasics {
 		}
 	}
 
-	/**
-	 * Execute the created HTTP Post Element and receive the respone
-	 *
-	 * @throws IOException
-	 *             General Error
-	 */
 	public void executePOST() throws IOException {
 		try {
 			HttpResponse response = httpclient.execute(httppost);
@@ -78,17 +62,6 @@ public class APIBasics {
 		}
 	}
 
-	/**
-	 * Extract the JSON Array annotations which contains all Entites
-	 *
-	 * @param API
-	 *            Name of API. Output is different for each API
-	 * @param JSONZeile
-	 *            Received response from Dandelion API
-	 * @return JSONArray annotations which includes all Entites
-	 * @throws ParseException
-	 *             Parse Error
-	 */
 	protected JSONArray readResponseJSON(String API, String JSONZeile, String jsonObject) {
 		JSONParser parser = new JSONParser();
 		JSONObject responeJSON = null;
@@ -104,43 +77,18 @@ public class APIBasics {
 		}
 
 		return returnValue;
-
 	}
 
-	/**
-	 * In case APi return relevance as a String. Convert into double
-	 *
-	 * @param relevance
-	 *            as String
-	 * @return relevance as Double
-	 */
 	double convertRelevance(String relevance) {
 		return Double.parseDouble(relevance.replace("\"", ""));
 	}
 
-	/**
-	 * Number of entities or keywords saved in the array entryList.
-	 *
-	 * @return Number of found entities or keywords.
-	 */
 	public Integer getNumberFoundEntries() {
 		return foundEntryList.size();
 	}
 
-	/**
-	 * Check if entity should be added to the entity list. First check if entity is
-	 * already in the entity list. Second check if entity is an URL or has more than
-	 * 2 spaces
-	 *
-	 * @param s
-	 *            Entity from API
-	 * @return String of entity. If null than it will not be added
-	 */
 	protected String addEntity(String s) {
-
-		// Replace # with nothing in case Entiy has a # sign
 		s = s.replace("#", "");
-		// Capitalize first letter
 		if (s.length() > 2) {
 			s = s.substring(0, 1).toUpperCase() + s.substring(1);
 		}
@@ -152,10 +100,6 @@ public class APIBasics {
 				s = null;
 				break;
 			}
-
-		// Check if Entity is an URL. If so do not add to Entity List.
-		// Check if entity has more than 2 spaces. If so do not add to Entity
-		// List because the entity is a sentance.
 		if (s != null && addEntity) {
 			if (s.contains("@") || s.contains("http") || s.contains("Http")
 					|| s.length() - s.replace(" ", "").length() > 1) {

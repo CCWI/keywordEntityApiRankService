@@ -1,96 +1,81 @@
 package de.hm.ccwi.api.benchmark.api;
 
+import com.ibm.cloud.sdk.core.service.security.IamOptions;
+import com.ibm.watson.natural_language_understanding.v1.NaturalLanguageUnderstanding;
+import com.ibm.watson.natural_language_understanding.v1.model.*;
+import de.hm.ccwi.api.benchmark.Configuration;
+import de.hm.ccwi.api.benchmark.api.response.ResponseEntry;
+import de.hm.ccwi.api.benchmark.util.SortResponseEntity;
+import org.json.simple.parser.ParseException;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 
-import org.json.simple.parser.ParseException;
-
-import com.ibm.watson.developer_cloud.natural_language_understanding.v1.NaturalLanguageUnderstanding;
-import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.AnalysisResults;
-import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.AnalyzeOptions;
-import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.EntitiesOptions;
-import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.EntitiesResult;
-import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.Features;
-import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.KeywordsOptions;
-import com.ibm.watson.developer_cloud.natural_language_understanding.v1.model.KeywordsResult;
-
-import de.hm.ccwi.api.benchmark.Configuration;
-import de.hm.ccwi.api.benchmark.api.response.ResponseEntry;
-import de.hm.ccwi.api.benchmark.util.SortResponseEntity;
-
-/**
- * Watson NLP Service.
- */
 public class WatsonNLP extends APIBasics implements InterfaceAPI {
 
-	public static final String API_IDENTIFIER = "watsonNlp";
+    public static final String API_IDENTIFIER = "watsonNlp";
 
-	private static WatsonNLP instance;
-	private NaturalLanguageUnderstanding service;
-	// private Map<String, AnalysisResults> tweetList = new HashMap<>();
-	private AnalyzeOptions parameters;
-	private AnalysisResults result;
+    private static WatsonNLP instance;
+    private NaturalLanguageUnderstanding service;
+    private AnalyzeOptions parameters;
+    private AnalysisResults result;
 
-	public WatsonNLP() {
-		service = new NaturalLanguageUnderstanding(NaturalLanguageUnderstanding.VERSION_DATE_2017_02_27,
-				properties.getProperty("watsonAPIUsername"), properties.getProperty("watsonAPIKey"));
-	}
+    public WatsonNLP() {
+        IamOptions options = new IamOptions.Builder().apiKey("").build();
+        service = new NaturalLanguageUnderstanding("2019-07-07", options);
+        service.setEndPoint("https://gateway-fra.watsonplatform.net/natural-language-understanding/api");
+    }
 
-	/**
-	 * Gets the singleton instance.
-	 *
-	 * @return the instance
-	 */
-	public static WatsonNLP getInstance() {
-		if (WatsonNLP.instance == null) {
-			WatsonNLP.instance = new WatsonNLP();
-		}
-		return WatsonNLP.instance;
-	}
+    public static WatsonNLP getInstance() {
+        if (WatsonNLP.instance == null) {
+            WatsonNLP.instance = new WatsonNLP();
+        }
+        return WatsonNLP.instance;
+    }
 
-	@Override
-	public void createPOST(String message) throws UnsupportedEncodingException {
-		EntitiesOptions entitiesOptions = new EntitiesOptions.Builder().limit(50).build();
+    @Override
+    public void createPOST(String message) throws UnsupportedEncodingException {
+        EntitiesOptions entitiesOptions = new EntitiesOptions.Builder().limit(50).build();
 
-		KeywordsOptions keywordsOptions = new KeywordsOptions.Builder().limit(50).build();
+        KeywordsOptions keywordsOptions = new KeywordsOptions.Builder().limit(50).build();
 
-		Features features = new Features.Builder().entities(entitiesOptions).keywords(keywordsOptions).build();
+        Features features = new Features.Builder().entities(entitiesOptions).keywords(keywordsOptions).build();
 
-		this.parameters = new AnalyzeOptions.Builder().text(message).features(features).returnAnalyzedText(true)
-				.language(Configuration.languageOfGoldstandard).build();
+        this.parameters = new AnalyzeOptions.Builder().text(message).features(features).returnAnalyzedText(true)
+                .language(Configuration.languageOfGoldstandard).build();
 
-	}
+    }
 
-	@Override
-	public void executePOST() throws IOException {
-		this.result = service.analyze(parameters).execute();
-	}
+    @Override
+    public void executePOST() throws IOException {
+        this.result = service.analyze(parameters).execute().getResult();
+    }
 
-	@Override
-	public void receiveGET() throws IOException, ParseException {
-		if (this.result != null) {
+    @Override
+    public void receiveGET() throws IOException, ParseException {
+        if (this.result != null) {
 
-			for (EntitiesResult eR : this.result.getEntities()) {
-				ResponseEntry response = new ResponseEntry();
-				if (eR != null && eR.getText() != null) {
-					response.setEntry(eR.getText());
-				}
-				foundEntryList.add(response);
-			}
-			for (KeywordsResult kwR : this.result.getKeywords()) {
-				ResponseEntry response = new ResponseEntry();
-				if (kwR != null && kwR.getText() != null) {
-					response.setEntry(kwR.getText());
-				}
-				foundEntryList.add(response);
-			}
-		}
-		Collections.sort(foundEntryList, new SortResponseEntity());
-	}
+            for (EntitiesResult eR : this.result.getEntities()) {
+                ResponseEntry response = new ResponseEntry();
+                if (eR != null && eR.getText() != null) {
+                    response.setEntry(eR.getText());
+                }
+                foundEntryList.add(response);
+            }
+            for (KeywordsResult kwR : this.result.getKeywords()) {
+                ResponseEntry response = new ResponseEntry();
+                if (kwR != null && kwR.getText() != null) {
+                    response.setEntry(kwR.getText());
+                }
+                foundEntryList.add(response);
+            }
+        }
+        Collections.sort(foundEntryList, new SortResponseEntity());
+    }
 
-	@Override
-	public String getApiName() {
-		return API_IDENTIFIER;
-	}
+    @Override
+    public String getApiName() {
+        return API_IDENTIFIER;
+    }
 }

@@ -10,14 +10,11 @@ public class TFPNFuzzyCalculator implements TFPNCalculator {
 
 	public String calcTP(RatingLog resultOfRatedAPI, List<String> distinctLoweredExpectedKEList,
 			String loweredSearchText, ResponseEntry foundEntry) {
-		// for-Schleife um die Suche fuzzy zu machen. (Bspw. wenn "agency" statt
-		// "digital agency" gefunden wird, dann +0,5.)
 		for (String expectedKE : distinctLoweredExpectedKEList) {
 			if (expectedKE.contains(foundEntry.getEntry().toLowerCase())
 					&& loweredSearchText.contains(foundEntry.getEntry().toLowerCase())) {
 				resultOfRatedAPI.incrementTp(1);
 				loweredSearchText = loweredSearchText.replace(expectedKE.toLowerCase(), "");
-				// break;
 			}
 		}
 		return loweredSearchText;

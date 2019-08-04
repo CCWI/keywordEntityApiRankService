@@ -27,10 +27,7 @@ public class MeaningCloudAPI extends APIBasics implements InterfaceAPI {
 	private static final Logger LOG = LogManager.getLogger("MeaningCloudAPI");
 
 	public static final String API_IDENTIFIER = "meaningCloud";
-	
-    /**
-     * Constructor.
-     */
+
 	public MeaningCloudAPI() {
 		apiKey = properties.getProperty("meaningCloudAPIKey");
 		outputMode = properties.getProperty("outputMode");
@@ -38,19 +35,9 @@ public class MeaningCloudAPI extends APIBasics implements InterfaceAPI {
 		topictypes = "a";
 	}
 
-	/**
-	 * Implemented createPOST from Interface interfaceAPI (see for more details)
-	 *
-	 * @param message
-	 *            Message, which should be posted.
-	 * @throws UnsupportedEncodingException
-	 *             if text is not in Unicode
-	 */
 	public void createPOST(String message) throws UnsupportedEncodingException {
 		httpclient = HttpClients.createDefault();
 		httppost = new HttpPost(Configuration.meaningcloudApiUri);
-
-		// Request parameters and other properties.
 		List<NameValuePair> params = new ArrayList<NameValuePair>(3);
 		params.add(new BasicNameValuePair("txt", message));
 		params.add(new BasicNameValuePair("key", apiKey));
@@ -62,35 +49,42 @@ public class MeaningCloudAPI extends APIBasics implements InterfaceAPI {
 
 	}
 
-	/**
-	 * Implemented receiveGET from Interface interfaceAPI (see for more details)
-	 *
-	 * @throws IOException
-	 *             IO Error
-	 * @throws ParseException
-	 *             Parse Error
-	 */
 	public void receiveGET() throws IOException, ParseException {
-		JSONArray JSONArray = readResponseJSON(API_IDENTIFIER, EntityUtils.toString(httpEntity, "UTF-8"), "entity_list");
+		String entityUtilsString = EntityUtils.toString(httpEntity, "UTF-8");
+		JSONArray JSONArray_entities = readResponseJSON(API_IDENTIFIER, entityUtilsString, "entity_list");
+		JSONArray JSONArray_concepts = readResponseJSON(API_IDENTIFIER, entityUtilsString, "concept_list");
 
-		if (JSONArray != null) {
-			for (Object aJSONArray : JSONArray) {
-
+		if(JSONArray_concepts != null) {
+			for (Object aJSONArray : JSONArray_concepts) {
 				JSONObject object = (JSONObject) aJSONArray;
-				ResponseEntry entity = new ResponseEntry();
+				ResponseEntry concept = new ResponseEntry();
 
 				String s = (String) object.get("form");
 				s = addEntity(s);
 
 				// Add Entity only if it is new and has not been added before
 				if (s != null) {
+					concept.setEntry(s);
+					concept.setConfidence(convertRelevance((String) object.get("relevance")));
+					foundEntryList.add(concept);
+				}
+			}
+		}
+
+		if (JSONArray_entities != null) {
+			for (Object aJSONArray : JSONArray_entities) {
+
+				JSONObject object = (JSONObject) aJSONArray;
+				ResponseEntry entity = new ResponseEntry();
+
+				String s = (String) object.get("form");
+				s = addEntity(s);
+				if (s != null) {
 					entity.setEntry(s);
 					entity.setConfidence(convertRelevance((String) object.get("relevance")));
 					foundEntryList.add(entity);
 				}
 			}
-
-			// Sort the Array List Entities from A to Z
 			Collections.sort(foundEntryList, new SortResponseEntity());
 
 			int i = 1;

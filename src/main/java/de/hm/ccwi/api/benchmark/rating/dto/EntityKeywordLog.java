@@ -14,10 +14,6 @@ public class EntityKeywordLog {
 
 	private List<String> expectedKeywordList;
 
-	/**
-	 * List of all found Entities and Keywords - In case of Watson, Entity- and
-	 * Keyword-Lists are concatenated.
-	 */
 	private List<ResponseEntry> foundEntryList;
 
 	public EntityKeywordLog(String apiName, String text, List<String> expectedEntityList, List<String> expectedKeywordList) {
@@ -26,14 +22,6 @@ public class EntityKeywordLog {
 		this.text = text;
 		this.expectedEntityList = expectedEntityList;
 		this.expectedKeywordList = expectedKeywordList;
-	}
-
-	public synchronized void addToExpectedEntityList(String entity) {
-		this.expectedEntityList.add(entity);
-	}
-
-	public synchronized void addToExpectedKeywordList(String keyword) {
-		this.expectedKeywordList.add(keyword);
 	}
 
 	public String getText() {
@@ -48,24 +36,12 @@ public class EntityKeywordLog {
 		return expectedEntityList;
 	}
 
-	public void setExpectedEntityList(List<String> expectedEntityList) {
-		this.expectedEntityList = expectedEntityList;
-	}
-
 	public List<String> getExpectedKeywordList() {
 		return expectedKeywordList;
 	}
 
-	public void setExpectedKeywordList(List<String> expectedKeywordList) {
-		this.expectedKeywordList = expectedKeywordList;
-	}
-
 	public String getApiName() {
 		return apiName;
-	}
-
-	public void setApiName(String apiName) {
-		this.apiName = apiName;
 	}
 
 	public List<ResponseEntry> getFoundEntryList() {

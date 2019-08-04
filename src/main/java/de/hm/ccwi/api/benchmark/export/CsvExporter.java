@@ -36,10 +36,8 @@ public class CsvExporter {
 	}
 
 	public void exportRatingLogList(List<RatingLog> processedLogList) {
-
 		try {
 			writer = new FileWriter(file);
-
 			List<String> headerList = Arrays.asList("API", "F1", "Precision", "Recall", "FN", "FP", "TN", "TP",
 					"Analyzed Text", "Found Entries of API", "Expected Entities", "Expected Keywords");
 			CSVWriter.writeLine(writer, headerList);
@@ -47,17 +45,9 @@ public class CsvExporter {
 
 			for (RatingLog log : processedLogList) {
 				LOG.info("result of rating: {}", log.toString());
-
-				// create String for foundEntries
 				String foundEntryString = createFoundEntryString(log.getEntityKeywordLog().getFoundEntryList());
-
-				// create String for entity
-				String expectedEntityString = createExpectedEntryString(
-						log.getEntityKeywordLog().getExpectedEntityList());
-
-				// create String for keywords
-				String expectedKeywordString = createExpectedEntryString(
-						log.getEntityKeywordLog().getExpectedKeywordList());
+				String expectedEntityString = createExpectedEntryString(log.getEntityKeywordLog().getExpectedEntityList());
+				String expectedKeywordString = createExpectedEntryString(log.getEntityKeywordLog().getExpectedKeywordList());
 
 				List<String> resultList = Arrays.asList(log.getApi(), convertDoubleToString(log.getF1()),
 						convertDoubleToString(log.getPrecision()), convertDoubleToString(log.getRecall()),
@@ -100,9 +90,6 @@ public class CsvExporter {
 	}
 
 	private String convertDoubleToString(double d) {
-		NumberFormat nf = NumberFormat.getNumberInstance(Locale.GERMAN);
-		DecimalFormat df = (DecimalFormat) nf;
-		// return new DecimalFormat("##,#######").format(d);
-		return df.format(d);
+		return ((DecimalFormat) NumberFormat.getNumberInstance(Locale.GERMAN)).format(d);
 	}
 }

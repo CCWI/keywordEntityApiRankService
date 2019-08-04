@@ -19,13 +19,6 @@ import de.hm.ccwi.api.benchmark.rating.dto.EntityKeywordLog;
 import de.hm.ccwi.api.benchmark.rating.dto.RatingLog;
 import de.hm.ccwi.api.benchmark.sets.TestEntry;
 
-/**
- * Test-execution class, which iterates the loaded entries and triggers
- * API-calls.
- * 
- * @author Max.Auch
- *
- */
 public class ProcessExtraction {
 
 	private static final Logger LOG = LogManager.getLogger("ProcessExtraction");
@@ -70,10 +63,8 @@ public class ProcessExtraction {
 			}
 		}
 
-		// Execute Rating
-		List<RatingLog> ratingLogList = new RatingCalculator(Configuration.FUZZY_SEARCH).rateFoundEntriesOfAPI(apiIdentifier, processedLogList);
-
-		// Export Result to CSV
+		List<RatingLog> ratingLogList = new RatingCalculator(Configuration.FUZZY_SEARCH)
+				.rateFoundEntriesOfAPI(apiIdentifier, processedLogList);
 		new CsvExporter().exportRatingLogList(ratingLogList);
 	}
 
@@ -91,7 +82,6 @@ public class ProcessExtraction {
 			processedLogList.add(callProcessingAPI(api, new EntityKeywordLog(api.getApiName(), entry.getPost(),
 					entry.getExpectedEntityList(), entry.getExpectedKeywordList())));
 		}
-
 	}
 
 	private void resolveApiInterface(String api) throws IllegalAccessException, ClassNotFoundException {
